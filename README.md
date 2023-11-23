@@ -13,3 +13,7 @@
 -  (echo; echo 'eval "$(/opt/homebrew/bin/brew shellenv)"') >> /Users/uchidayuma/.zprofile
 - eval "$(/opt/homebrew/bin/brew shellenv)"
 - aws --version
+
+## 共通）Swarmクラスターの準備
+- aws configure list-profiles
+- aws configure --profile swarmuser
