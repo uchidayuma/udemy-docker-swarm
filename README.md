@@ -17,3 +17,7 @@
 ## 共通）Swarmクラスターの準備
 - aws configure list-profiles
 - aws configure --profile swarmuser
+
+### Mac)EC2にSSH接続
+- mv udemy-swarm-node.pem .ssh
+- ssh -i ~/.ssh/udemy-swarm-node.pem ec2-user@IPアドレス
