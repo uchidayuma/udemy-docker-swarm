@@ -30,3 +30,63 @@
 4. sudo usermod -aG docker $USER
 5. exit
 6. 再度SSH
+7. docker swarm init
+
+## シングルクラスターの構築
+### Dockerfile
+```
+FROM php:8.2-apache
+
+WORKDIR /var/www
+ENV APACHE_RUN_USER www-data
+ENV APACHE_RUN_GROUP www-data
+
+RUN apt-get update && apt-get install -y \
+    git \
+    zip \
+    unzip \
+    curl \
+    libzip-dev \
+    liboing-dev \
+    libxml2-dev
+
+RUN docker-php-ext-install pdo_mysql mysqli zip opcache mbstring xml exif pcntl bcmath
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+COPY . /var/www/
+COPY simple-swarm/sites-available /etc/apache2/sites-available
+COPY simple-swarm/cacert.pem /etc/ssl/cert.pem
+COPY .env.production .env
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-suggest
+
+RUN chown -R www-data:www-data /var/www
+RUN a2enmod rewrite
+
+EXPOSE 80
+EXPOSE 443
+```
+
+### 000-default.conf
+```
+<VirtualHost *:80>
+  Seradmin webmaster@localhost
+  DocumentRoot "/var/www/public"
+
+  <Directory "/var/www/public">
+    AllowOverride All
+    Require all granted
+  </Directory>
+
+  ErrorLog ${APACHE_LOG_DIR}/error.log
+  CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+```
+
+### .dockerignore
+```
+simple-swarm/cacert.pem
+storage/logs/*
+bootstrap/cache/*
+```
