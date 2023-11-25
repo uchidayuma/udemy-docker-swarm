@@ -21,3 +21,12 @@
 ### Mac)EC2にSSH接続
 - mv udemy-swarm-node.pem .ssh
 - ssh -i ~/.ssh/udemy-swarm-node.pem ec2-user@IPアドレス
+
+### Dockerのインストール
+
+1. sudo yum -y install docker
+2. sudo systemctl start docker
+3. sudo systemctl enable docker
+4. sudo usermod -aG docker $USER
+5. exit
+6. 再度SSH
