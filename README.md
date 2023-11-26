@@ -47,7 +47,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     libzip-dev \
-    liboing-dev \
+    libonig-dev \
     libxml2-dev
 
 RUN docker-php-ext-install pdo_mysql mysqli zip opcache mbstring xml exif pcntl bcmath
@@ -60,33 +60,33 @@ COPY .env.production .env
 
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progress --no-suggest
+RUN php artisan key:generate
 
 RUN chown -R www-data:www-data /var/www
 RUN a2enmod rewrite
 
 EXPOSE 80
-EXPOSE 443
 ```
 
 ### 000-default.conf
 ```
 <VirtualHost *:80>
-  Seradmin webmaster@localhost
-  DocumentRoot "/var/www/public"
+    ServerAdmin webmaster@localhost
+    DocumentRoot /var/www/public
 
-  <Directory "/var/www/public">
-    AllowOverride All
-    Require all granted
-  </Directory>
+    <Directory /var/www/public>
+        AllowOverride All
+        Require all granted
+        Options -Indexes
+    </Directory>
 
-  ErrorLog ${APACHE_LOG_DIR}/error.log
-  CustomLog ${APACHE_LOG_DIR}/access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
 ```
 
 ### .dockerignore
 ```
-simple-swarm/cacert.pem
 storage/logs/*
 bootstrap/cache/*
 ```
