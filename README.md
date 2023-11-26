@@ -30,10 +30,13 @@
 			"Sid": "PushPull",
 			"Effect": "Allow",
 			"Action": [
-				"ecr:PutImage",
 				"ecr:BatchGetImage",
-				"ecr:GetDownloadUrlForLayer",
-				"ecr:BatchDeleteImage"
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:CompleteLayerUpload",
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:InitiateLayerUpload",
+                "ecr:PutImage",
+                "ecr:UploadLayerPart"
 			],
 			"Resource": "*"
 		}
