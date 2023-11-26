@@ -15,6 +15,31 @@
 - aws --version
 
 ## 共通）Swarmクラスターの準備
+### swarmuserのインラインポリシー
+```
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "GetAuthorizationToken",
+			"Effect": "Allow",
+			"Action": "ecr:GetAuthorizationToken",
+			"Resource": "*"
+		},
+		{
+			"Sid": "PushPull",
+			"Effect": "Allow",
+			"Action": [
+				"ecr:PutImage",
+				"ecr:BatchGetImage",
+				"ecr:GetDownloadUrlForLayer",
+				"ecr:BatchDeleteImage"
+			],
+			"Resource": "*"
+		}
+	]
+}
+```
 - aws configure list-profiles
 - aws configure --profile swarmuser
 
